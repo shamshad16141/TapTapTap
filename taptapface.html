@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>TapTapTap</title>
+  <title>TapTapTap - Space Edition</title>
   <style>
     * {
       box-sizing: border-box;
@@ -13,36 +13,140 @@
 
     body {
       font-family: 'Segoe UI', sans-serif;
-      background-color: #f0f0f0;
-      transition: background 0.4s, color 0.4s;
+      background: #000;
+      color: white;
       overflow-x: hidden;
+      position: relative;
+      transition: background 0.5s ease;
     }
 
-    body.dark {
-      background-color: #000;
-      color: #fff;
+    body.pure-dark {
+      background: #000000 !important;
+    }
+
+    /* Space background with stars */
+    .space-bg {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: radial-gradient(ellipse at center, #000000 0%, #000033 100%);
+      z-index: -2;
+      transition: opacity 0.5s ease;
+    }
+
+    body.pure-dark .space-bg {
+      opacity: 0;
+    }
+
+    .stars {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      z-index: -1;
+      transition: opacity 0.5s ease;
+    }
+
+    body.pure-dark .stars {
+      opacity: 0;
+    }
+
+    .star {
+      position: absolute;
+      background-color: white;
+      border-radius: 50%;
+      animation: twinkle 5s infinite;
+    }
+
+    @keyframes twinkle {
+      0%, 100% { opacity: 0.3; }
+      50% { opacity: 1; }
+    }
+
+    /* Nebula effect */
+    .nebula {
+      position: fixed;
+      width: 300px;
+      height: 300px;
+      border-radius: 50%;
+      background: radial-gradient(circle, rgba(0, 50, 100, 0.3) 0%, transparent 70%);
+      filter: blur(40px);
+      z-index: -1;
+      animation: float 20s infinite linear;
+      transition: opacity 0.5s ease;
+    }
+
+    body.pure-dark .nebula {
+      opacity: 0;
+    }
+
+    .nebula:nth-child(1) {
+      top: 10%;
+      left: 10%;
+      background: radial-gradient(circle, rgba(0, 100, 150, 0.2) 0%, transparent 70%);
+      animation-duration: 25s;
+    }
+
+    .nebula:nth-child(2) {
+      bottom: 15%;
+      right: 10%;
+      background: radial-gradient(circle, rgba(100, 0, 150, 0.2) 0%, transparent 70%);
+      animation-duration: 30s;
+    }
+
+    @keyframes float {
+      0% { transform: translate(0, 0) rotate(0deg); }
+      25% { transform: translate(20px, 20px) rotate(90deg); }
+      50% { transform: translate(0, 40px) rotate(180deg); }
+      75% { transform: translate(-20px, 20px) rotate(270deg); }
+      100% { transform: translate(0, 0) rotate(360deg); }
     }
 
     h1 {
       text-align: center;
       padding: 10px;
       font-weight: 600;
+      color: #fff;
+      text-shadow: 0 0 15px #00f2ff, 0 0 30px #00f2ff;
+      animation: pulse 3s infinite;
+      letter-spacing: 2px;
+    }
+
+    body.pure-dark h1 {
+      text-shadow: 0 0 15px #666, 0 0 30px #666;
+      animation: none;
+    }
+
+    @keyframes pulse {
+      0%, 100% { 
+        text-shadow: 0 0 15px #00f2ff, 0 0 30px #00f2ff; 
+      }
+      50% { 
+        text-shadow: 0 0 25px #00f2ff, 0 0 50px #00f2ff, 0 0 60px #00f2ff; 
+      }
     }
 
     #game-container {
       width: 320px;
       height: 320px;
       margin: 20px auto;
-      background-color: #fff;
+      background: rgba(0, 0, 0, 0.7);
       border-radius: 15px;
-      box-shadow: 0 0 15px white;
+      box-shadow: 0 0 20px rgba(0, 242, 255, 0.5);
       position: relative;
       overflow: hidden;
+      border: 1px solid #00f2ff;
+      backdrop-filter: blur(5px);
+      transition: all 0.5s ease;
     }
 
-    body.dark #game-container {
-      background-color: #111;
-      box-shadow: 0 0 15px white;
+    body.pure-dark #game-container {
+      box-shadow: 0 0 20px rgba(255, 255, 255, 0.2);
+      border: 1px solid #666;
+      background: rgba(0, 0, 0, 0.9);
     }
 
     #target {
@@ -56,11 +160,15 @@
       flex-direction: column;
       padding-top: 6px;
       transition: top 0.4s ease, left 0.4s ease;
-      background-color: black;
+      background: radial-gradient(circle at 30% 30%, #2c3e50, #1a1a2e);
+      box-shadow: 0 0 15px rgba(0, 242, 255, 0.7);
+      border: 1px solid #00f2ff;
     }
 
-    body.dark #target {
-      background-color: white;
+    body.pure-dark #target {
+      background: radial-gradient(circle at 30% 30%, #444, #222);
+      box-shadow: 0 0 15px rgba(255, 255, 255, 0.5);
+      border: 1px solid #888;
     }
 
     .eyes {
@@ -74,13 +182,15 @@
     .eye {
       width: 16px;
       height: 16px;
-      background-color: white;
+      background-color: #00f2ff;
       border-radius: 50%;
       transform-origin: center;
+      box-shadow: 0 0 10px #00f2ff;
     }
 
-    body.dark .eye {
-      background-color: black;
+    body.pure-dark .eye {
+      background-color: #888;
+      box-shadow: 0 0 10px #888;
     }
 
     .left-eye {
@@ -109,23 +219,39 @@
       left: 50%;
       transform: translate(-50%, -50%);
       pointer-events: none;
-      color: rgba(0, 0, 0, 0.3);
+      color: rgba(0, 242, 255, 0.3);
+      text-shadow: 0 0 10px rgba(0, 242, 255, 0.5);
     }
 
-    body.dark #timer-inside {
+    body.pure-dark #timer-inside {
       color: rgba(255, 255, 255, 0.3);
+      text-shadow: 0 0 10px rgba(255, 255, 255, 0.3);
     }
 
     #score-display {
       text-align: center;
       font-size: 22px;
       margin: 8px 0;
+      color: #00f2ff;
+      text-shadow: 0 0 10px #00f2ff;
+    }
+
+    body.pure-dark #score-display {
+      color: #fff;
+      text-shadow: 0 0 10px #fff;
     }
 
     #highscore-display {
       text-align: center;
       font-size: 22px;
       margin: 8px 0;
+      color: #00f2ff;
+      text-shadow: 0 0 10px #00f2ff;
+    }
+
+    body.pure-dark #highscore-display {
+      color: #fff;
+      text-shadow: 0 0 10px #fff;
     }
 
     #pause-btn {
@@ -134,13 +260,19 @@
       right: 10px;
       padding: 6px 14px;
       font-size: 14px;
-      background: crimson;
+      background: rgba(220, 20, 60, 0.8);
       color: white;
-      border: none;
+      border: 1px solid #ff6b81;
       border-radius: 5px;
       cursor: pointer;
       z-index: 10;
       display: none;
+      box-shadow: 0 0 10px rgba(220, 20, 60, 0.5);
+      backdrop-filter: blur(5px);
+    }
+
+    #pause-btn:hover {
+      background: rgba(220, 20, 60, 1);
     }
 
     #howto-btn {
@@ -151,11 +283,17 @@
       height: 34px;
       font-size: 18px;
       border-radius: 50%;
-      border: none;
-      background: #2196F3;
+      border: 1px solid #2196F3;
+      background: rgba(33, 150, 243, 0.8);
       color: white;
       cursor: pointer;
       z-index: 10;
+      box-shadow: 0 0 10px rgba(33, 150, 243, 0.5);
+      backdrop-filter: blur(5px);
+    }
+
+    #howto-btn:hover {
+      background: rgba(33, 150, 243, 1);
     }
 
     #back-btn {
@@ -166,18 +304,19 @@
       height: 34px;
       font-size: 18px;
       border-radius: 50%;
-      border: none;
-      background: #666;
+      border: 1px solid #666;
+      background: rgba(100, 100, 100, 0.8);
       color: white;
       cursor: pointer;
       z-index: 10;
       display: flex;
       align-items: center;
       justify-content: center;
+      backdrop-filter: blur(5px);
     }
 
     #back-btn:hover {
-      background: #555;
+      background: rgba(120, 120, 120, 0.9);
     }
 
     #howto-popup {
@@ -187,20 +326,23 @@
       width: 90%;
       max-width: 300px;
       transform: translate(-50%, -50%) scale(0.8);
-      background: white;
-      color: black;
+      background: rgba(0, 0, 0, 0.9);
+      color: #00f2ff;
       padding: 20px;
       border-radius: 10px;
-      box-shadow: 0 0 10px #333;
+      box-shadow: 0 0 20px rgba(0, 242, 255, 0.5);
       opacity: 0;
       pointer-events: none;
       transition: 0.3s ease;
       z-index: 999;
+      border: 1px solid #00f2ff;
+      backdrop-filter: blur(10px);
     }
 
-    body.dark #howto-popup {
-      background: #222;
-      color: white;
+    body.pure-dark #howto-popup {
+      color: #fff;
+      box-shadow: 0 0 20px rgba(255, 255, 255, 0.3);
+      border: 1px solid #888;
     }
 
     #howto-popup.active {
@@ -214,9 +356,14 @@
       padding: 6px 12px;
       border: none;
       border-radius: 5px;
-      background: #4CAF50;
+      background: rgba(76, 175, 80, 0.8);
       color: white;
       cursor: pointer;
+      border: 1px solid #4CAF50;
+    }
+
+    #howto-popup button:hover {
+      background: rgba(76, 175, 80, 1);
     }
 
     #controls {
@@ -234,24 +381,52 @@
       height: 40px;
       border-radius: 50%;
       font-size: 18px;
-      border: none;
+      border: 1px solid #00f2ff;
       cursor: pointer;
+      background: rgba(0, 0, 0, 0.7);
+      color: #00f2ff;
+      box-shadow: 0 0 10px rgba(0, 242, 255, 0.5);
+      backdrop-filter: blur(5px);
+      transition: all 0.3s ease;
+    }
+
+    #start-btn:hover,
+    #dark-mode-toggle:hover {
+      background: rgba(0, 20, 40, 0.8);
+      box-shadow: 0 0 15px #00f2ff;
+    }
+
+    body.pure-dark #start-btn,
+    body.pure-dark #dark-mode-toggle {
+      border: 1px solid #888;
+      box-shadow: 0 0 10px rgba(255, 255, 255, 0.3);
+      color: #fff;
+    }
+
+    body.pure-dark #start-btn:hover,
+    body.pure-dark #dark-mode-toggle:hover {
+      box-shadow: 0 0 15px #fff;
     }
 
     #start-btn {
-      background: #4CAF50;
-      color: white;
-    }
-
-    #dark-mode-toggle {
-      background: #333;
-      color: white;
+      background: rgba(76, 175, 80, 0.8);
+      border: 1px solid #4CAF50;
     }
 
     #time-selector {
       padding: 6px 10px;
       border-radius: 6px;
       font-size: 14px;
+      background: rgba(0, 0, 0, 0.7);
+      color: #00f2ff;
+      border: 1px solid #00f2ff;
+      box-shadow: 0 0 10px rgba(0, 242, 255, 0.3);
+    }
+
+    body.pure-dark #time-selector {
+      color: #fff;
+      border: 1px solid #888;
+      box-shadow: 0 0 10px rgba(255, 255, 255, 0.2);
     }
 
     .scroll-text {
@@ -268,203 +443,250 @@
       padding-left: 100%;
       animation: scroll-left 10s linear infinite;
       font-size: 1.5em;
+      color: #00f2ff;
+      text-shadow: 0 0 10px #00f2ff;
+    }
+
+    body.pure-dark .scroll-text h2 {
+      color: #fff;
+      text-shadow: 0 0 10px #fff;
     }
 
     @keyframes scroll-left {
       0% { transform: translateX(0%); }
       100% { transform: translateX(-100%); }
     }
-
-    body.dark .scroll-text h2 {
-      color: white;
-      text-shadow: 0 0 10px white;
-    }
   </style>
 </head>
 <body>
 
-<h1>TapTapTap</h1>
-<button id="back-btn">←</button>
-<button id="pause-btn">Pause</button>
-<button id="howto-btn">?</button>
+  <!-- Space Background Elements -->
+  <div class="space-bg"></div>
+  <div class="stars" id="stars"></div>
+  <div class="nebula"></div>
+  <div class="nebula"></div>
 
-<div id="howto-popup">
-  <h3>How to Play</h3>
-  <p>🎯 Tap the face to earn points.</p>
-  <p>❌ Miss = -1 point.</p>
-  <p>🌙 Try dark mode for space feel!</p>
-  <button id="close-popup">Got it!</button>
-</div>
+  <h1>TapTapTap</h1>
+  <button id="back-btn">←</button>
+  <button id="pause-btn">Pause</button>
+  <button id="howto-btn">?</button>
 
-<div id="game-container">
-  <div id="timer-inside">30</div>
-  <div id="target" style="display: none;">
-    <div class="eyes">
-      <div class="eye left-eye"></div>
-      <div class="eye right-eye"></div>
+  <div id="howto-popup">
+    <h3>How to Play</h3>
+    <p>🎯 Tap the face to earn points.</p>
+    <p>❌ Miss = -1 point.</p>
+    <p>🌙 Toggle between space and pure dark mode!</p>
+    <button id="close-popup">Got it!</button>
+  </div>
+
+  <div id="game-container">
+    <div id="timer-inside">30</div>
+    <div id="target" style="display: none;">
+      <div class="eyes">
+        <div class="eye left-eye"></div>
+        <div class="eye right-eye"></div>
+      </div>
     </div>
   </div>
-</div>
 
-<div id="score-display">Score: 0</div>
-<div id="highscore-display">High Score: 0</div>
-<div id="controls">
-  <button id="start-btn" title="Start">▶️</button>
-  <select id="time-selector">
-    <option value="15">15s</option>
-    <option value="30" selected>30s</option>
-    <option value="60">60s</option>
-  </select>
-  <button id="dark-mode-toggle" title="Toggle Dark Mode">🌙</button>
-</div>
+  <div id="score-display">Score: 0</div>
+  <div id="highscore-display">High Score: 0</div>
+  <div id="controls">
+    <button id="start-btn" title="Start">▶️</button>
+    <select id="time-selector">
+      <option value="15">15s</option>
+      <option value="30" selected>30s</option>
+      <option value="60">60s</option>
+    </select>
+    <button id="dark-mode-toggle" title="Toggle Dark Mode">🌙</button>
+  </div>
 
-<div class="scroll-text"><h2>Made by Shamshad</h2></div>
+  <div class="scroll-text"><h2>Made by Shamshad</h2></div>
 
-<script>
-  let score = 0, timeLeft = 30, gameActive = false, isPaused = false;
-  let timer, moveInterval;
-  const target = document.getElementById("target");
-  const scoreDisplay = document.getElementById("score-display");
-  const highscoreDisplay = document.getElementById("highscore-display");
-  const timerInside = document.getElementById("timer-inside");
+  <script>
+    let score = 0, timeLeft = 30, gameActive = false, isPaused = false;
+    let timer, moveInterval;
+    const target = document.getElementById("target");
+    const scoreDisplay = document.getElementById("score-display");
+    const highscoreDisplay = document.getElementById("highscore-display");
+    const timerInside = document.getElementById("timer-inside");
+    let isPureDark = false;
 
-  function moveTarget() {
-    const box = document.getElementById("game-container");
-    const maxX = box.clientWidth - target.clientWidth;
-    const maxY = box.clientHeight - target.clientHeight;
-    target.style.left = Math.floor(Math.random() * maxX) + "px";
-    target.style.top = Math.floor(Math.random() * maxY) + "px";
-  }
-
-  function startGame(duration) {
-    score = 0;
-    timeLeft = duration;
-    gameActive = true;
-    isPaused = false;
-    scoreDisplay.textContent = "Score: 0";
-    timerInside.textContent = `${timeLeft}s`;
-    target.style.display = "flex";
-    moveTarget();
-
-    clearInterval(timer);
-    clearInterval(moveInterval);
-
-    timer = setInterval(() => {
-      if (!isPaused) {
-        timeLeft--;
-        timerInside.textContent = `${timeLeft}s`;
-        if (timeLeft <= 0) endGame();
+    // Create stars
+    function createStars() {
+      const starsContainer = document.getElementById('stars');
+      const starCount = 150;
+      
+      for (let i = 0; i < starCount; i++) {
+        const star = document.createElement('div');
+        star.classList.add('star');
+        
+        // Random position
+        const x = Math.random() * 100;
+        const y = Math.random() * 100;
+        
+        // Random size
+        const size = Math.random() * 3;
+        
+        // Random animation delay
+        const delay = Math.random() * 5;
+        
+        star.style.left = `${x}%`;
+        star.style.top = `${y}%`;
+        star.style.width = `${size}px`;
+        star.style.height = `${size}px`;
+        star.style.animationDelay = `${delay}s`;
+        
+        starsContainer.appendChild(star);
       }
-    }, 1000);
-
-    moveInterval = setInterval(() => {
-      if (!isPaused) moveTarget();
-    }, 1000);
-
-    document.getElementById("pause-btn").style.display = "block";
-    document.getElementById("start-btn").disabled = true;
-    
-    // Load high score for current time setting
-    updateHighScoreDisplay(duration);
-  }
-
-  function endGame() {
-    gameActive = false;
-    clearInterval(timer);
-    clearInterval(moveInterval);
-    target.style.display = "none";
-    document.getElementById("pause-btn").style.display = "none";
-    document.getElementById("start-btn").disabled = false;
-    
-    // Save high score
-    const time = parseInt(document.getElementById("time-selector").value);
-    const isNewHighScore = saveHighScore(time, score);
-    
-    if (isNewHighScore) {
-      alert(`Game Over! New High Score: ${score}`);
-      updateHighScoreDisplay(time);
-    } else {
-      alert(`Game Over! Final Score: ${score}`);
     }
-  }
 
-  target.addEventListener("click", () => {
-    if (gameActive && !isPaused) {
-      score++;
-      scoreDisplay.textContent = `Score: ${score}`;
+    function moveTarget() {
+      const box = document.getElementById("game-container");
+      const maxX = box.clientWidth - target.clientWidth;
+      const maxY = box.clientHeight - target.clientHeight;
+      target.style.left = Math.floor(Math.random() * maxX) + "px";
+      target.style.top = Math.floor(Math.random() * maxY) + "px";
+    }
+
+    function startGame(duration) {
+      score = 0;
+      timeLeft = duration;
+      gameActive = true;
+      isPaused = false;
+      scoreDisplay.textContent = "Score: 0";
+      timerInside.textContent = `${timeLeft}s`;
+      target.style.display = "flex";
       moveTarget();
+
+      clearInterval(timer);
+      clearInterval(moveInterval);
+
+      timer = setInterval(() => {
+        if (!isPaused) {
+          timeLeft--;
+          timerInside.textContent = `${timeLeft}s`;
+          if (timeLeft <= 0) endGame();
+        }
+      }, 1000);
+
+      moveInterval = setInterval(() => {
+        if (!isPaused) moveTarget();
+      }, 1000);
+
+      document.getElementById("pause-btn").style.display = "block";
+      document.getElementById("start-btn").disabled = true;
+      
+      // Load high score for current time setting
+      updateHighScoreDisplay(duration);
     }
-  });
 
-  document.getElementById("game-container").addEventListener("click", (e) => {
-    if (gameActive && !isPaused && !target.contains(e.target)) {
-      score = Math.max(0, score - 1);
-      scoreDisplay.textContent = `Score: ${score}`;
+    function endGame() {
+      gameActive = false;
+      clearInterval(timer);
+      clearInterval(moveInterval);
+      target.style.display = "none";
+      document.getElementById("pause-btn").style.display = "none";
+      document.getElementById("start-btn").disabled = false;
+      
+      // Save high score
+      const time = parseInt(document.getElementById("time-selector").value);
+      const isNewHighScore = saveHighScore(time, score);
+      
+      if (isNewHighScore) {
+        alert(`Game Over! New High Score: ${score}`);
+        updateHighScoreDisplay(time);
+      } else {
+        alert(`Game Over! Final Score: ${score}`);
+      }
     }
-  });
 
-  document.getElementById("start-btn").onclick = () => {
-    const time = parseInt(document.getElementById("time-selector").value);
-    startGame(time);
-  };
+    target.addEventListener("click", () => {
+      if (gameActive && !isPaused) {
+        score++;
+        scoreDisplay.textContent = `Score: ${score}`;
+        moveTarget();
+      }
+    });
 
-  document.getElementById("pause-btn").onclick = () => {
-    isPaused = !isPaused;
-    document.getElementById("pause-btn").textContent = isPaused ? "Resume" : "Pause";
-  };
+    document.getElementById("game-container").addEventListener("click", (e) => {
+      if (gameActive && !isPaused && !target.contains(e.target)) {
+        score = Math.max(0, score - 1);
+        scoreDisplay.textContent = `Score: ${score}`;
+      }
+    });
 
-  document.getElementById("dark-mode-toggle").onclick = () => {
-    document.body.classList.toggle("dark");
-  };
+    document.getElementById("start-btn").onclick = () => {
+      const time = parseInt(document.getElementById("time-selector").value);
+      startGame(time);
+    };
 
-  document.getElementById("howto-btn").onclick = () => {
-    document.getElementById("howto-popup").classList.add("active");
-  };
+    document.getElementById("pause-btn").onclick = () => {
+      isPaused = !isPaused;
+      document.getElementById("pause-btn").textContent = isPaused ? "Resume" : "Pause";
+    };
 
-  document.getElementById("close-popup").onclick = () => {
-    document.getElementById("howto-popup").classList.remove("active");
-  };
+    // Dark mode toggle between space theme and pure black
+    document.getElementById("dark-mode-toggle").onclick = () => {
+      isPureDark = !isPureDark;
+      document.body.classList.toggle('pure-dark', isPureDark);
+      
+      // Update button text based on mode
+      const darkModeBtn = document.getElementById("dark-mode-toggle");
+      if (isPureDark) {
+        darkModeBtn.title = "Switch to Space Theme";
+      } else {
+        darkModeBtn.title = "Switch to Pure Dark Mode";
+      }
+    };
 
-  // Back button functionality
-  document.getElementById("back-btn").onclick = () => {
-    if (gameActive) {
-      if (confirm("Are you sure you want to go back to the main menu? Your current game will be lost.")) {
+    document.getElementById("howto-btn").onclick = () => {
+      document.getElementById("howto-popup").classList.add("active");
+    };
+
+    document.getElementById("close-popup").onclick = () => {
+      document.getElementById("howto-popup").classList.remove("active");
+    };
+
+    // Back button functionality
+    document.getElementById("back-btn").onclick = () => {
+      if (gameActive) {
+        if (confirm("Are you sure you want to go back to the main menu? Your current game will be lost.")) {
+          window.location.href = "index.html";
+        }
+      } else {
         window.location.href = "index.html";
       }
-    } else {
-      window.location.href = "index.html";
+    };
+
+    function getHighKey(time) {
+      return `taptaptap_high_${time}`;
     }
-  };
 
-  function getHighKey(time) {
-    return `tapnova_high_${time}`;
-  }
-
-  function loadHighScore(time) {
-    return parseInt(localStorage.getItem(getHighKey(time))) || 0;
-  }
-
-  function updateHighScoreDisplay(time) {
-    const high = loadHighScore(time);
-    highscoreDisplay.textContent = `High Score: ${high}`;
-  }
-
-  function saveHighScore(time, newScore) {
-    const currentHigh = loadHighScore(time);
-    if (newScore > currentHigh) {
-      localStorage.setItem(getHighKey(time), newScore);
-      return true;
+    function loadHighScore(time) {
+      return parseInt(localStorage.getItem(getHighKey(time))) || 0;
     }
-    return false;
-  }
 
-  // Initialize high score display on page load
-  window.onload = function() {
-    const time = parseInt(document.getElementById("time-selector").value);
-    updateHighScoreDisplay(time);
-  };
-</script>
+    function updateHighScoreDisplay(time) {
+      const high = loadHighScore(time);
+      highscoreDisplay.textContent = `High Score: ${high}`;
+    }
+
+    function saveHighScore(time, newScore) {
+      const currentHigh = loadHighScore(time);
+      if (newScore > currentHigh) {
+        localStorage.setItem(getHighKey(time), newScore);
+        return true;
+      }
+      return false;
+    }
+
+    // Initialize stars and high score display on page load
+    window.onload = function() {
+      createStars();
+      const time = parseInt(document.getElementById("time-selector").value);
+      updateHighScoreDisplay(time);
+    };
+  </script>
 </body>
-
 </html>
-
